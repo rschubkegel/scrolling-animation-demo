@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Scrolling Animation</title>
+    <title>Scrolling Animation Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
       :root {
@@ -11,8 +11,6 @@
         --dark-secondary: #71aabc;
       }
       html {
-        /* scroll-snap-type: y mandatory; */
-        scroll-snap-type: none;
         overflow-x: hidden;
       }
       body {
@@ -25,10 +23,10 @@
         padding: 10rem 6rem;
         box-sizing: border-box;
         position: relative;
-        scroll-snap-align: center;
       }
       section:nth-of-type(2) {
         background-color: var(--light-secondary);
+        overflow-x: hidden;
       }
       h1 {
         color: var(--dark-secondary);
@@ -76,7 +74,7 @@
       }
       svg {
         position: absolute;
-        top: 60vh;
+        top: 55vh;
         width: 100%;
         height: 180vh;
         pointer-events: none;
@@ -89,6 +87,12 @@
       @media screen and (max-width: 800px) {
         .hide-when-small {
           display: none;
+        }
+        h1 {
+          font-size: 3rem;
+        }
+        section {
+          padding: 8rem 4rem;
         }
         img:nth-of-type(1) {
           height: 40%;
@@ -156,12 +160,12 @@
         gsap.to("path", {
           scrollTrigger: {
             trigger: path,
-            start: "top center+=75",
-            end: "bottom center",
+            start: "top center",
+            end: "bottom+=100 center",
             scrub: 1
           },
           strokeDashoffset: 0,
-          ease: "sine.inOut"
+          ease: "slow(0.7, 0.4, false)"
         })
       }
     </script>
