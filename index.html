@@ -2,12 +2,13 @@
 <html>
   <head>
     <title>Scrolling Animation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
       :root {
         --light-primary: rgb(220, 241, 237);
         --light-secondary: rgb(177, 206, 223);
-        --dark-primary: rgb(56, 75, 75);
-        --dark-secondary: rgb(117, 155, 142);
+        --dark-primary: rgb(74, 99, 99);
+        --dark-secondary: #71aabc;
       }
       html {
         /* scroll-snap-type: y mandatory; */
@@ -21,21 +22,24 @@
       }
       section {
         height: 100vh;
-        padding: 12rem 6rem;
+        padding: 10rem 6rem;
         box-sizing: border-box;
         position: relative;
         scroll-snap-align: center;
+      }
+      section:nth-of-type(2) {
+        background-color: var(--light-secondary);
       }
       h1 {
         color: var(--dark-secondary);
         font-size: 4rem;
         font-family: sans-serif;
         text-align: center;
-        padding-top: 20vh;
         margin: 0;
+        padding-top: 30vh;
       }
-      section:nth-of-type(2) {
-        background-color: var(--light-secondary);
+      .greeting {
+        padding-top: 10vh;
       }
       blockquote {
         margin: 0;
@@ -46,12 +50,14 @@
       }
       img {
         position: absolute;
+        z-index: 2;
+        box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.507);
       }
       img:nth-of-type(1) {
         height: 50%;
         max-height: 40vw;
         right: 10%;
-        top: 20%;
+        top: 18%;
         outline: solid 2px var(--light-primary);
         transform: rotate(.01turn);
       }
@@ -59,9 +65,26 @@
         height: 50%;
         max-height: 40vw;
         right: calc(10% + 12rem);
-        bottom: 10%;
+        bottom: 12%;
         outline: solid 2px var(--light-primary);
         transform: rotate(-.02turn);
+      }
+      .line-container {
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+      }
+      svg {
+        position: absolute;
+        top: 60vh;
+        width: 100%;
+        height: 180vh;
+        pointer-events: none;
+      }
+      path {
+        fill: none;
+        stroke: var(--dark-secondary);
+        stroke-width: .3;
       }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
@@ -97,7 +120,7 @@
         gsap.from("img", {
           scrollTrigger: {
             trigger: "blockquote",
-            toggleActions: "restart pause none none"
+            toggleActions: "restart none none none"
           },
           delay: .2,
           duration: 2,
@@ -107,14 +130,38 @@
           rotation: "1turn",
           stagger: .25
         })
+
+        // setup svg animation
+        // thx DesignCourse for the tutorial!
+        // https://www.youtube.com/watch?v=FJ44qmE5odc
+        let path = document.querySelector("path")
+        let pathLength = path.getTotalLength()
+        path.style.strokeDasharray = pathLength + ' ' + pathLength
+        path.style.strokeDashoffset = pathLength;
+        window.addEventListener("scroll", () => {
+          var scrollPercentage =
+            (document.documentElement.scrollTop + document.body.scrollTop)
+            / (document.documentElement.scrollHeight - document.documentElement.clientHeight)
+          var drawLength = pathLength * scrollPercentage
+          path.style.strokeDashoffset = pathLength - drawLength
+        })
+
       }
     </script>
+
+    <div class="line-container">
+      <svg viewBox="0 0 48 300" preserveAspectRatio="xMidYMax meet">
+        <path
+          d="m 34.19854,16.425611 c 0,0 -6.299474,-18.20305 -10.879732,-16.12596996 -4.699765,2.13126996 5.43369,17.54614996 5.43369,17.54614996 0,0 -13.896721,-20.83984 -18.202859,-17.17964996 C 6.6988265,3.939301 23.907454,20.319661 23.907454,20.319661 c 0,0 -14.5803936,-16.40084 -18.3839775,-12.1861 -3.8035818,4.21474 14.3539985,15.75947 14.3539985,15.75947 0,0 -14.7162448,-11.13242 -15.5765782,-5.36005 -0.7979589,5.35387 13.5842242,10.62848 13.5842242,10.62848 0,0 7.109075,22.08159 21.780042,11.45311 14.670957,-10.62848 5.670595,-17.16107 3.23447,-20.02407 -2.91464,-3.42538 -2.288854,-9.76392 0.464896,-13.56621 -7.368259,-5.33857 -11.358022,9.67699 -7.579855,15.18401 0,0 -5.900158,-0.10195 -5.719035,9.61028 v 44.3661 c 0.250909,14.678169 26.490875,18.817053 7.48763,27.859329 -33.5986842,15.98719 -23.347735,49.42398 -12.00399,38.68817 21.723228,-20.55902 29.98829,31.64415 -4.90948,-8.22729 -8.263687,-9.44143 -26.6437429,16.37229 -8.639598,24.04603 45.3348,19.32263 -36.23783,43.81437 10.195105,39.14818 8.190409,-0.82308 33.250938,-12.0282 12.88851,-21.57306 -31.3158419,-14.67927 -4.767268,15.98936 -5.018177,41.70751 v 54.94944 c 0,0 -6.299473,-18.20304 -10.879732,-16.12597 -4.69976,2.13128 5.433689,17.54616 5.433689,17.54616 0,0 -13.896721,-20.83984 -18.2028557,-17.17965 -3.8508116,3.27316 13.3578137,19.65353 13.3578137,19.65353 0,0 -14.5803914,-16.40085 -18.3839753,-12.18611 -3.8035832,4.21475 14.3540023,15.75948 14.3540023,15.75948 0,0 -14.7162496,-11.13242 -15.57658196,-5.36006 -0.79795892,5.35388 13.58422096,10.62849 13.58422096,10.62849 0,0 7.109076,22.08158 21.780043,11.4531 14.670955,-10.62848 5.670593,-17.16106 3.234469,-20.02407 -2.914639,-3.42538 -2.288863,-9.76392 0.464896,-13.5662 -7.368258,-5.33858 -11.358022,9.67697 -7.579855,15.184 0,0 -5.900158,-0.10195 -5.719035,9.61028"
+        />
+      </svg>
+    </div>
 
     <section>
       <h1 class="greeting">Hello World</h1>
     </section>
 
-    <section class="pin-me">
+    <section>
       <blockquote>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
       </blockquote>
