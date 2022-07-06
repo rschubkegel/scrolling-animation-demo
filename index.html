@@ -86,6 +86,23 @@
         stroke: var(--dark-secondary);
         stroke-width: .3;
       }
+      @media screen and (max-width: 800px) {
+        .hide-when-small {
+          display: none;
+        }
+        img:nth-of-type(1) {
+          height: 40%;
+          max-height: none;
+          right: 12%;
+          top: 15%;
+        }
+        img:nth-of-type(2) {
+          height: 40%;
+          max-height: none;
+          left: 15%;
+          bottom: 15%;
+        }
+      }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/ScrollTrigger.min.js"></script>
@@ -131,21 +148,21 @@
           stagger: .25
         })
 
-        // setup svg animation
-        // thx DesignCourse for the tutorial!
-        // https://www.youtube.com/watch?v=FJ44qmE5odc
+        // svg animation
         let path = document.querySelector("path")
         let pathLength = path.getTotalLength()
         path.style.strokeDasharray = pathLength + ' ' + pathLength
-        path.style.strokeDashoffset = pathLength;
-        window.addEventListener("scroll", () => {
-          var scrollPercentage =
-            (document.documentElement.scrollTop + document.body.scrollTop)
-            / (document.documentElement.scrollHeight - document.documentElement.clientHeight)
-          var drawLength = pathLength * scrollPercentage
-          path.style.strokeDashoffset = pathLength - drawLength
+        path.style.strokeDashoffset = pathLength
+        gsap.to("path", {
+          scrollTrigger: {
+            trigger: path,
+            start: "top center+=75",
+            end: "bottom center",
+            scrub: 1
+          },
+          strokeDashoffset: 0,
+          ease: "sine.inOut"
         })
-
       }
     </script>
 
@@ -162,7 +179,7 @@
     </section>
 
     <section>
-      <blockquote>
+      <blockquote class="hide-when-small">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
       </blockquote>
       <img src="https://images.pexels.com/photos/11643608/pexels-photo-11643608.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"/>
