@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Scrolling Animation</title>
+    <style>
+      :root {
+        --light-primary: rgb(220, 241, 237);
+        --light-secondary: rgb(177, 206, 223);
+        --dark-primary: rgb(56, 75, 75);
+        --dark-secondary: rgb(117, 155, 142);
+      }
+      html {
+        /* scroll-snap-type: y mandatory; */
+        scroll-snap-type: none;
+        overflow-x: hidden;
+      }
+      body {
+        background-color: var(--light-primary);
+        padding: 0;
+        margin: 0;
+      }
+      section {
+        height: 100vh;
+        padding: 12rem 6rem;
+        box-sizing: border-box;
+        position: relative;
+        scroll-snap-align: center;
+      }
+      h1 {
+        color: var(--dark-secondary);
+        font-size: 4rem;
+        font-family: sans-serif;
+        text-align: center;
+        padding-top: 20vh;
+        margin: 0;
+      }
+      section:nth-of-type(2) {
+        background-color: var(--light-secondary);
+      }
+      blockquote {
+        margin: 0;
+        position: absolute;
+        width: 40%;
+        color: var(--dark-primary);
+        font-size: 2rem;
+      }
+      img {
+        position: absolute;
+      }
+      img:nth-of-type(1) {
+        height: 50%;
+        max-height: 40vw;
+        right: 10%;
+        top: 20%;
+        outline: solid 2px var(--light-primary);
+        transform: rotate(.01turn);
+      }
+      img:nth-of-type(2) {
+        height: 50%;
+        max-height: 40vw;
+        right: calc(10% + 12rem);
+        bottom: 10%;
+        outline: solid 2px var(--light-primary);
+        transform: rotate(-.02turn);
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/ScrollTrigger.min.js"></script>
+  </head>
+  <body onload="init()">
+
+    <script>
+      function init() {
+        // header rise from bottom
+        gsap.registerPlugin(ScrollTrigger)
+        gsap.from(".greeting", {
+          duration: 2,
+          ease: "power4.out",
+          delay: 0.2,
+          opacity: "0",
+          y: 200
+        })
+
+        // text swipe from right
+        gsap.from("blockquote", {
+          scrollTrigger: {
+            trigger: "blockquote",
+            start: "top bottom",
+            end: "top center",
+            scrub: 2
+          },
+          opacity: "0",
+          x: 200
+        })
+
+        // images swipe from right
+        gsap.from("img", {
+          scrollTrigger: {
+            trigger: "blockquote",
+            toggleActions: "restart pause none none"
+          },
+          delay: .2,
+          duration: 2,
+          ease: "power4.out",
+          x: 400,
+          opacity: 0,
+          rotation: "1turn",
+          stagger: .25
+        })
+      }
+    </script>
+
+    <section>
+      <h1 class="greeting">Hello World</h1>
+    </section>
+
+    <section class="pin-me">
+      <blockquote>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </blockquote>
+      <img src="https://images.pexels.com/photos/11643608/pexels-photo-11643608.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"/>
+      <img src="https://images.pexels.com/photos/7552591/pexels-photo-7552591.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"/>
+    </section>
+
+    <section>
+      <h1>Goodbye World</h1>
+    </section>
+
+  </body>
+</html>
